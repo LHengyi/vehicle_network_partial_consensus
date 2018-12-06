@@ -1,0 +1,7 @@
+<nodes> <!-- The opening tag -->
+
+   <node id="0" x="0.0" y="0.0" type="priority"/> <!-- def. of node "0" -->
+   <node id="1" x="500.0" y="0.0" type="priority"/>
+   <node id="2" x="1000.0" y="0.0" type="priority"/>
+
+</nodes> <!-- The closing tag -->

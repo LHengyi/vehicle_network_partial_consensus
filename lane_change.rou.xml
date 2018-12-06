@@ -1,0 +1,7 @@
+<routes>
+<route id = "Route1" edges = "edge1 edge2" />
+<vehicle id="V0" route="Route1" depart="0.5" 					departSpeed="10" departPos="base" color="1,0,0" departLane="0" 					arrivalLane="2"/>
+<vehicle id="V1" route="Route1" depart="0.5" 					departSpeed="10" departPos="base" color="1,0,0" departLane="2" 					arrivalLane="0"/>
+<vehicle id="V2" route="Route1" depart="2.421152" 					departSpeed="10" departPos="base" color="1,0,0" departLane="1" 					arrivalLane="2"/>
+<vehicle id="V3" route="Route1" depart="3.600181" 					departSpeed="10" departPos="base" color="1,0,0" departLane="0" 					arrivalLane="2"/>
+</routes>
