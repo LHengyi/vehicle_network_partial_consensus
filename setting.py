@@ -5,3 +5,5 @@ def init():
 	arrRate = 1
 	global log
 	log = False
+	global partial_consensus
+	partial_consensus = False

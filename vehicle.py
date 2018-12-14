@@ -29,3 +29,16 @@ class Vehicle(object):
 			self.degree = []
 			self.location = []
 			self.speed = []
+
+class Vtype(object):
+    """defines the vehicle types"""
+    def __init__(self, name, accel, decel, sigma, length, minGap, maxSpeed, guiShape,cfm):
+        self.name = name
+        self.accel = accel
+        self.decel = decel
+        self.sigma = sigma
+        self.length = length
+        self.minGap = minGap
+        self.maxSpeed = maxSpeed
+        self.guiShape = guiShape
+        self.car_following_model = cfm

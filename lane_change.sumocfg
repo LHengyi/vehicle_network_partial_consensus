@@ -5,6 +5,7 @@
     <input>
         <net-file value="lane_change.net.xml"/>
         <route-files value="lane_change.rou.xml"/>
+        <gui-settings-file value = "lane_change.settings.xml"/>
         <!-- <additional-files value="cross.det.xml"/> -->
         <!-- <gui-settings-file value="cross.settings.xml" /> -->
     </input>
