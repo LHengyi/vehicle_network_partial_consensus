@@ -7,3 +7,5 @@ def init():
 	log = False
 	global partial_consensus
 	partial_consensus = False
+	global max_decision
+	max_decision = 2

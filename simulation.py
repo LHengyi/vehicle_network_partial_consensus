@@ -16,7 +16,7 @@ if 'SUMO_HOME' in os.environ:
 else:
 	sys.exit("please declare environment variable 'SUMO_HOME'")
 
-sumoBinary = "sumo.exe"
+sumoBinary = "sumo-gui.exe"
 sumoCmd = [sumoBinary, "-c", "lane_change.sumocfg"]
 # global Vehicles
 Vehicles = []
@@ -26,6 +26,89 @@ N = 40
 cur_vehicle_list = []
 # global all_vehicles
 all_vehicles = defaultdict()
+
+def safety_distance(ego_vehicle,preceding_vehicle):
+	ego_cur_v = traci.vehicle.getSpeed(ego_vehicle)
+	ego_max_dec = traci.vehicle.getDecel(ego_vehicle)
+	coop_cur_v = traci.vehicle.getSpeed(cooperative_vehicle)
+	coop_max_dec = traci.vehicle.getDecel(cooperative_vehicle)
+	g_safe = 0.1 * ego_cur_v + math.pow(ego_cur_v,2)/(2*ego_max_dec) - math.pow(coop_cur_v,2)/(2*coop_max_dec) + 1.0
+	return g_safe
+
+def find_pred(ego_vehicle, target_lane_idx):
+	ego_pos = traci.vehicle.getPosition(ego_vehicle)
+	target_lane_ID = (cur_lane_ID + '.')[:-1]
+	target_lane_ID = target_lane_ID[:-1] + str(farest_lane_idx)
+	vehicles_on_target = traci.lane.getLastStepVehicleIDs(target_lane_ID)
+	pre = None
+	for target_v in vehicles_on_target:
+		target_v_pos = traci.vehicle.getPosition(target_v)
+		if target_v_pos[0] > ego_pos[0]:
+			if pre:
+				pre_pos = traci.vehicle.getPosition(pre)
+				if pre_pos[0] > target_v_pos[0]:
+					pre = target_v
+			else:
+				pre = target_v
+	if not pre:
+		ego_roadID = traci.vehicle.getRoadID(ego_vehicle)
+		ego_route = traci.vehicle.getRoute(ego_vehicle)
+		if ego_roadID != ego_route[-1]:
+			next_lane_ID = vehicle_route[-1] + "_" + str(target_lane_idx)#only two edge
+			next_lane_vehicle_list = traci.lane.getLastStepVehicleIDs(next_lane_ID)
+			if next_lane_vehicle_list:
+				pre = next_lane_vehicle_list[0]
+	return pre
+def find_follow(ego_vehicle, target_lane_idx):
+	ego_pos = traci.vehicle.getPosition(ego_vehicle)
+	target_lane_ID = (cur_lane_ID + '.')[:-1]
+	target_lane_ID = target_lane_ID[:-1] + str(farest_lane_idx)
+	vehicles_on_target = traci.lane.getLastStepVehicleIDs(target_lane_ID)
+	follower = None
+	for target_v in vehicles_on_target:
+		target_v_pos = traci.vehicle.getPosition(target_v)
+		if target_v_pos[0] < ego_pos[0]:
+			if follower:
+				cur_follow_pos = traci.vehicle.getPosition(follower)
+				if cur_follow_pos[0] < target_v_pos[0]:
+					follower = target_v
+			else:
+				follower = target_v
+	return follower
+		
+
+def safety_level_decision(ego_vehicle, local_group, decision_pool, level = 1):
+	global all_vehicles
+	ego_decision = all_vehicles[ego_vehicle].decision
+	ego_intention = lane_change_intention(ego_vehicle)
+	if ego_intention == 0:
+		all_vehicles[ego_vehicle].decision = (ego_vehicle,0)
+	if level == 1:#assume global consensus
+		for local_v in local_group:
+			all_vehicles[local_v].decision = ego_decision
+	elif level == 2:
+		ego_pos = traci.vehicle.getPosition(ego_vehicle)
+		cur_lane_idx = traci.vehicle.getLaneIndex(ego_vehicle)
+		cur_lane_ID = traci.vehicle.getLaneID(ego_vehicle)
+		cur_pre = find_pred(ego_vehicle,cur_lane_idx)
+		if(cur_lane_idx == 0 or cur_lane_idx == 2):
+			# ego_intention = lane_change_intention(ego_vehicle)
+			target_lane_idx = cur_lane_idx + ego_intention
+			target_lane_pre = find_pred(ego_vehicle,target_lane_idx)
+			next_next_lane_pre = find_pred(ego_vehicle,cur_lane_idx+2*ego_intention)
+			all_vehicles[target_lane_pre].decision = (None,0)
+			all_vehicles[next_next_lane_pre].decision = (None,0)
+			target_lane_follower = find_follow(ego_vehicle,target_lane_idx)
+			next_next_lane_follower = find_follow(ego_vehicle,cur_lane_idx+2*ego_intention)
+			all_vehicles[target_lane_follower].decision = (None,0)
+			all_vehicles[next_next_lane_follower].decision = (None,0)
+
+def lane_change_intention(ego_vehicle):
+	global all_vehicles
+	cur_lane_idx = traci.vehicle.getLaneIndex(ego_vehicle)
+	return all_vehicles[ego_vehicle].arriveLane - cur_lane_idx
+
+
 
 def route_gen(arrRate, route_file):
 	global all_vehicles
@@ -46,33 +129,37 @@ def route_gen(arrRate, route_file):
 			departTime += -(math.log(1.0 -random.random())/arrRate)
 			departLane = random.choice(startingLanes)
 			arrivalLane = random.choice([i for i in endingLanes if i != departLane])
+			# print('<vehicle id="%s" type= "type1" route="%s" depart="%f" \
+			# 		departSpeed="10" departPos="base" color="1,0,0" departLane="%d" \
+			# 		arrivalLane="%d"/>' % ("V" + str(i), "Route1",\
+			# 		 departTime, departLane,arrivalLane),file=outfile) #default vehicle model
 			print('<vehicle id="%s" type= "type1" route="%s" depart="%f" \
-					departSpeed="10" departPos="base" color="1,0,0" departLane="%d" \
-					arrivalLane="%d"/>' % ("V" + str(i), "Route1",\
-					 departTime, departLane,arrivalLane),file=outfile) #default vehicle model
+					departSpeed="10" departPos="base" color="1,0,0" />' % ("V" + str(i), "Route1",\
+					 departTime),file=outfile)
 			v = Vehicle("V"+str(i), ["edge1","edge2"], departTime, 10, departLane, arrivalLane)
 			all_vehicles["V"+str(i)] = (v)
 		print('</routes>',file=outfile)
 	# all_vehicles = sorted(all_vehicles.items(),key=lambda k_v: k_v[1].departTime)
 
-def run(pc_level):
+def run(pc_level,max_decision = 2):
 	traci.start(sumoCmd)
 	step = 0
 	edges = ['edge1_0', 'edge1_1', 'edge1_2', 'edge2_0', 'edge2_1','edge2_2']
 	while traci.simulation.getMinExpectedNumber() != 0:
 		traci.simulationStep()
+
 		global all_vehicles
 		arrived_list = traci.simulation.getArrivedIDList()
 		currentTime = traci.simulation.getCurrentTime() * 0.001
 		for arr_v in arrived_list:
 			all_vehicles[arr_v].leaveTime = currentTime
 		if setting.partial_consensus:
-			partial_consensus(pc_level)
+			partial_consensus(pc_level, max_decision)
 		step+=1
 	traci.close()
 
-def partial_consensus(pc_level=None,poll_size = 1):
-	assert poll_size >= 1
+def partial_consensus(pc_level=None,pool_size = 2):
+	assert pool_size >= 1
 	if pc_level:
 		consensus_level = pc_level
 	else:
@@ -99,6 +186,8 @@ def partial_consensus(pc_level=None,poll_size = 1):
 	if __debug__:
 		print("Current vehicles on road:\t", cur_vehicle_list)
 	cur_vehicle_list = [v for v in cur_vehicle_list if v not in arrived_list]
+	for cur_v in cur_vehicle_list:
+		traci.vehicle.setLaneChangeMode(cur_v,256)
 
 	for (k,v) in all_vehicles.items():
 		#get current lane index, 0 for rightmost lane
@@ -268,6 +357,7 @@ def partial_consensus(pc_level=None,poll_size = 1):
 				print("The current lane change intention of ego vehicle ",v.name, "is: ", direction ,"\tThe local group is ", ":\t" ,local_group)
 		#making decision
 		ego_decision = (v.name,direction)
+		all_vehicles[v.name].decision = ego_decision
 		if len(local_group) == 1:
 			posibility = 0
 		else:
@@ -279,22 +369,25 @@ def partial_consensus(pc_level=None,poll_size = 1):
 				all_vehicles[local_v].decision = ego_decision
 		else:# pool_size decision
 			other_member = [x for x in local_group if x != v.name]
-			if len(other_member) > 0:
-				attacker = random.choice(other_member)#the randomly chosen vehicle must have different decision
+			if len(other_member) >= pool_size-1:
+				attackers = random.choices(other_member, k = pool_size-1)#the randomly chosen vehicle must have different decision
 			else:
 				continue#no other member, not even a direct preceding vehicle
-			victim = random.choice(other_member)
-			victim_lane_idx = traci.vehicle.getLaneIndex(victim)
-			fake_decision = random.choice([1,-1])
-			if victim_lane_idx + fake_decision not in range(0,3):
-				fake_decision = victim_lane_idx - fake_decision
-			decision_poll = [ego_decision, (victim,fake_decision)]
+			decision_poll = [ego_decision]
+			victims = random.choices(other_member, k = pool_size-1)
+			for vic in victims:
+				vic_lane_idx = traci.vehicle.getLaneIndex(vic)
+				fake_decision = random.choice([1,-1])
+				if vic_lane_idx + fake_decision not in range(0,3):
+					fake_decision = vic_lane_idx - fake_decision
+				decision_poll.append((vic,fake_decision))
 			if __debug__:
 				print("Decision poll: ", decision_poll)
 			all_vehicles[v.name].decision = ego_decision
-			all_vehicles[attacker].decision = (victim,fake_decision)
+			for atk_idx in range(0,len(attackers)):
+				all_vehicles[attackers[atk_idx]].decision = decision_poll[atk_idx+1]
 
-			for local_v in [x for x in other_member if x != attacker]:
+			for local_v in [x for x in other_member if x not in attackers]:
 				all_vehicles[local_v].decision = random.choice(decision_poll)
 		if __debug__:
 			for local_v in local_group:
@@ -442,14 +535,16 @@ if __name__ == "__main__":
 	optParser.add_option("--pc", action="store_true", default=False, help="if set, considering partial consensus in the simulation")
 	optParser.add_option("--pc-comp",action="store",dest = "pc_comp",default=5,type="float",help="the partial consensus level")
 	optParser.add_option("--rate",action="store",dest="rate",default=3,type="float",help="vehicle arrive rate")
+	optParser.add_option("--max_decision",action="store",dest="max_decision",default=2,type="int",help="The maximum number of disagreement")
 	options, args = optParser.parse_args()
 
 	setting.partial_consensus = options.pc
 	setting.seed_value = options.seed
 	pc_comp = options.pc_comp
 	setting.arrRate = options.rate/10
+	setting.max_decision = options.max_decision
 	# pc_component = range(0,1,0.1)
 	route_gen(setting.arrRate,"lane_change.rou.xml")
 	# for pc_i in np.arange(0,1.1,0.1)
-	run([1-pc_comp/10,pc_comp/10])#global,partial
+	run([1-pc_comp/10,pc_comp/10],setting.max_decision)#global,partial
 	get_result(options.output)
