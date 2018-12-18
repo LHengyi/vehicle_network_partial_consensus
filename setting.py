@@ -9,3 +9,5 @@ def init():
 	partial_consensus = False
 	global max_decision
 	max_decision = 2
+	global safety_level
+	safety_level = 1
