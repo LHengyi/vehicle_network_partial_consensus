@@ -17,7 +17,7 @@ else:
 import traci
 
 
-sumoBinary = "sumo.exe"
+sumoBinary = "sumoD"
 sumoCmd = [sumoBinary, "-c", "lane_change.sumocfg"]
 # global Vehicles
 Vehicles = []
