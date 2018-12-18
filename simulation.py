@@ -17,7 +17,7 @@ else:
 import traci
 
 
-sumoBinary = "sumo-guiD"
+sumoBinary = "sumo.exe"
 sumoCmd = [sumoBinary, "-c", "lane_change.sumocfg"]
 # global Vehicles
 Vehicles = []
@@ -141,6 +141,7 @@ def safety_level_decision(ego_vehicle, level = 1):
 			if target_lane_follower:
 				all_vehicles[target_lane_follower].decision = (None,0)
 	elif level == 3:
+		cur_lane_idx = traci.vehicle.getLaneIndex(ego_vehicle)
 		if(cur_lane_idx == 0 or cur_lane_idx == 2):
 			target_lane_idx = cur_lane_idx + ego_intention
 			target_lane_pre = find_pred(ego_vehicle,target_lane_idx)
@@ -320,6 +321,8 @@ def partial_consensus(pc_level=None,pool_size = 2,safety_level = 1):
 			cur_lane_idx = traci.vehicle.getLaneIndex(v.name)
 			cur_lane_ID = traci.vehicle.getLaneID(v.name)
 		else:
+			continue
+		if cur_lane_idx == -1073741824:
 			continue
 		#get destination lane index
 		arrive_lane_idx = v.arriveLane
