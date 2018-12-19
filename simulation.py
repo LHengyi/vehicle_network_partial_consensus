@@ -228,7 +228,7 @@ def apply_maeuver(ego_vehicle):
 			neighbor_pre_intention = lane_change_intention(neighbor_pre)
 			if cur_lane_idx-1+neighbor_pre_intention == cur_lane_idx:
 				target_speed = min(target_speed,CACC_check(ego_vehicle,neighbor_pre))
-				
+
 	if target_speed == 100:
 		target_speed = next_speed
 	vehicle_length = traci.vehicle.getLength(ego_vehicle)
@@ -478,9 +478,10 @@ def partial_consensus(pc_level=None,pool_size = 2,safety_level = 1):
 			cur_pre = None
 			cur_pre = find_pred(v.name,cur_lane_idx)
 			if cur_pre:
-				next_speed = CACC_check(v.name, cur_pre)
-				delta = traci.simulation.getDeltaT()
-				traci.vehicle.slowDown(v.name,next_speed, delta)
+				# next_speed = CACC_check(v.name, cur_pre)
+				# delta = traci.simulation.getDeltaT()
+				# traci.vehicle.slowDown(v.name,next_speed, delta)
+				traci.vehicle.setSpeed(v.name,-1)
 			else:
 				traci.vehicle.setSpeed(v.name,-1)
 			continue
