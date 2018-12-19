@@ -15,6 +15,7 @@ class Vehicle(object):
 		self.departSpeed = departSpeed
 		self.departLane = departLane
 		self.arriveLane = arriveLane
+		self.real_leave_lane = None
 		self.leaveTime = 0
 		self.mID = 0
 		self.arrived = False

@@ -17,8 +17,8 @@ else:
 import traci
 
 
-sumoBinary = "sumo.exe"
-sumoCmd = [sumoBinary, "-c", "lane_change.sumocfg", "--step-length", "0.1"]
+sumoBinary = "sumoD"
+sumoCmd = [sumoBinary, "-c", "lane_change.sumocfg"]#  "--step-length", "0.1"
 # global Vehicles
 Vehicles = []
 # global N
@@ -312,6 +312,7 @@ def partial_consensus(pc_level=None,pool_size = 2,safety_level = 1):
 	currentTime = traci.simulation.getCurrentTime() * 0.001
 	for arr_v in arrived_list:
 		all_vehicles[arr_v].leaveTime = currentTime
+		# all_vehicles[arr_v].real_leave_lane = traci.vehicle.getLaneIndex(arr_v)
 
 	if __debug__:
 		print("Arrived vehicle list:\t", arrived_list)
@@ -339,6 +340,7 @@ def partial_consensus(pc_level=None,pool_size = 2,safety_level = 1):
 		elif arrive_lane_idx < cur_lane_idx:
 			direction = -1
 		else:
+			all_vehicles[v.name].real_leave_lane = all_vehicles[v.name].arriveLane
 			direction = 0
 
 		#find preceding vehicle, follower on each adjacent lane
@@ -640,7 +642,7 @@ def saturation_function(speed, v_max):
 def get_result(output_file):
 	output = open(output_file,'w')
 	for k,v in all_vehicles.items():
-		print(v.leaveTime - v.departTime,file=output)
+		print(v.leaveTime - v.departTime,v.real_leave_lane == v.arriveLane,file=output)
 
 
 
