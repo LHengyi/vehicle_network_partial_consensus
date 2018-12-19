@@ -17,8 +17,8 @@ else:
 import traci
 
 
-sumoBinary = "sumoD"
-sumoCmd = [sumoBinary, "-c", "lane_change.sumocfg"]
+sumoBinary = "sumo.exe"
+sumoCmd = [sumoBinary, "-c", "lane_change.sumocfg", "--step-length", "0.1"]
 # global Vehicles
 Vehicles = []
 # global N
@@ -132,6 +132,8 @@ def safety_level_decision(ego_vehicle, level = 1):
 				all_vehicles[target_lane_follower].decision = (None,0)
 			if next_next_lane_follower:
 				all_vehicles[next_next_lane_follower].decision = (None,0)
+			if cur_pre:
+				all_vehicles[cur_pre].decision = (None,0)
 		else:
 			target_lane_idx = cur_lane_idx + ego_intention
 			target_lane_pre = find_pred(ego_vehicle,target_lane_idx)
@@ -140,6 +142,8 @@ def safety_level_decision(ego_vehicle, level = 1):
 				all_vehicles[target_lane_pre].decision = (None,0)
 			if target_lane_follower:
 				all_vehicles[target_lane_follower].decision = (None,0)
+			if cur_pre:
+				all_vehicles[cur_pre].decision = (None,0)
 	elif level == 3:
 		cur_lane_idx = traci.vehicle.getLaneIndex(ego_vehicle)
 		if(cur_lane_idx == 0 or cur_lane_idx == 2):
@@ -147,7 +151,7 @@ def safety_level_decision(ego_vehicle, level = 1):
 			target_lane_pre = find_pred(ego_vehicle,target_lane_idx)
 			next_next_lane_pre = find_pred(ego_vehicle,cur_lane_idx+2*ego_intention)
 			if target_lane_pre:
-				all_vehicles[target_lane_pre].decision = ego_decision
+				all_vehicles[target_lane_pre].decision = (None,0)
 			if next_next_lane_pre:
 				all_vehicles[next_next_lane_pre].decision = (next_next_lane_pre,-ego_intention)
 			next_next_lane_follower = find_follow(ego_vehicle,cur_lane_idx+2*ego_intention)
@@ -161,6 +165,8 @@ def safety_level_decision(ego_vehicle, level = 1):
 				all_vehicles[target_lane_pre].decision = (None,0)
 			if target_lane_follower:
 				all_vehicles[target_lane_follower].decision = (None,0)
+	else:
+		assert(False)
 
 def lane_change_intention(ego_vehicle):
 	global all_vehicles
@@ -204,10 +210,10 @@ def apply_maeuver(ego_vehicle):
 			hd_speed_cur_lane = min(hd_speed,human_driver_check(ego_vehicle,cur_pre))
 	if target_lane_pre:
 		if all_vehicles[target_lane_pre].decision == ego_decision:
-			acca_speed = min(acca_speed_cur_lane,CACC_check(ego_vehicle,target_lane_pre))
+			acca_speed = min(hd_speed_cur_lane,min(acca_speed_cur_lane,CACC_check(ego_vehicle,target_lane_pre)))
 		else:
-			hd_speed = min(hd_speed_cur_lane,CACC_check(ego_vehicle,target_lane_pre))
-	target_speed = min(acca_speed,hd_speed)
+			hd_speed = min(acca_speed_cur_lane,min(hd_speed_cur_lane,CACC_check(ego_vehicle,target_lane_pre)))
+	target_speed = min(acca_speed,hd_speed,acca_speed_cur_lane,hd_speed_cur_lane)
 	if target_speed == 100:
 		target_speed = next_speed
 	vehicle_length = traci.vehicle.getLength(ego_vehicle)
@@ -215,23 +221,23 @@ def apply_maeuver(ego_vehicle):
 	if target_lane_pre:
 		target_lane_pre_pos = traci.vehicle.getPosition(target_lane_pre)
 		if target_lane_pre_pos[0] - ego_pos[0] - vehicle_length< 0:
-			traci.vehicle.slowDown(ego_vehicle,min(acca_speed_cur_lane,hd_speed_cur_lane), delta)
+			traci.vehicle.slowDown(ego_vehicle,target_speed, delta)
 			return
 	if target_lane_follower:
 		target_lane_follower_pos = traci.vehicle.getPosition(target_lane_follower)
 		if ego_pos[0] - target_lane_follower_pos[0] - vehicle_length < 0:
-			traci.vehicle.slowDown(ego_vehicle,min(acca_speed_cur_lane,hd_speed_cur_lane), delta)
+			traci.vehicle.slowDown(ego_vehicle,target_speed, delta)
 			return
 	if next_next_lane_pre:
 		if (cur_lane_idx + ego_intention) == (cur_lane_idx+2*ego_intention+lane_change_intention(next_next_lane_pre)):
-			traci.vehicle.slowDown(ego_vehicle,min(acca_speed_cur_lane,hd_speed_cur_lane), delta)
+			traci.vehicle.slowDown(ego_vehicle,target_speed, delta)
 			return
 		if (cur_lane_idx + ego_intention) == (cur_lane_idx+2*ego_intention+all_vehicles[next_next_lane_pre].decision[1]):
-			traci.vehicle.slowDown(ego_vehicle,min(acca_speed_cur_lane,hd_speed_cur_lane), delta)
+			traci.vehicle.slowDown(ego_vehicle,target_speed, delta)
 			return
 	if next_next_lane_follower:
 		if (cur_lane_idx + ego_intention) == (cur_lane_idx+2*ego_intention+all_vehicles[next_next_lane_follower].decision[1]):
-			traci.vehicle.slowDown(ego_vehicle,min(acca_speed_cur_lane,hd_speed_cur_lane), delta)
+			traci.vehicle.slowDown(ego_vehicle,target_speed, delta)
 			return
 	#make lane change
 	traci.vehicle.changeLane(ego_vehicle,cur_lane_idx+ego_intention,delta)
@@ -260,8 +266,8 @@ def route_gen(arrRate, route_file):
 			# 		arrivalLane="%d"/>' % ("V" + str(i), "Route1",\
 			# 		 departTime, departLane,arrivalLane),file=outfile) #default vehicle model
 			print('<vehicle id="%s" type= "type1" route="%s" depart="%f" \
-					departSpeed="10" departPos="base" color="1,0,0" />' % ("V" + str(i), "Route1",\
-					 departTime),file=outfile)
+					departSpeed="10" departPos="base" color="1,0,0" departLane="%d" />' % ("V" + str(i), "Route1",\
+					 departTime,departLane),file=outfile)
 			v = Vehicle("V"+str(i), ["edge1","edge2"], departTime, 10, departLane, arrivalLane)
 			all_vehicles["V"+str(i)] = (v)
 		print('</routes>',file=outfile)
@@ -453,24 +459,7 @@ def partial_consensus(pc_level=None,pool_size = 2,safety_level = 1):
 			traci.vehicle.setColor(v.name,(255,0,0))
 			lane_vehicle_list = traci.lane.getLastStepVehicleIDs(cur_lane_ID)
 			cur_pre = None
-			for lane_v in lane_vehicle_list:
-				v_pos = traci.vehicle.getPosition(lane_v)
-				# find direct preceding vehicle
-				if v_pos[0] > ego_position[0]:
-					if cur_pre:
-						cur_pre_pos = traci.vehicle.getPosition(cur_pre)
-						if cur_pre_pos[0] > v_pos[0]:
-							cur_pre = lane_v
-					else:
-						cur_pre = lane_v
-			if not cur_pre:
-				vehicle_roadID = traci.vehicle.getRoadID(v.name)
-				vehicle_route = traci.vehicle.getRoute(v.name)
-				if vehicle_roadID != vehicle_route[-1]:
-					next_lane_ID = vehicle_route[-1] + "_" + str(cur_lane_idx)#only two edge
-					next_lane_vehicle_list = traci.lane.getLastStepVehicleIDs(next_lane_ID)
-					if next_lane_vehicle_list:
-						cur_pre = next_lane_vehicle_list[0]
+			cur_pre = find_pred(v.name,cur_lane_idx)
 			if cur_pre:
 				next_speed = CACC_check(v.name, cur_pre)
 				delta = traci.simulation.getDeltaT()
@@ -678,5 +667,5 @@ if __name__ == "__main__":
 	# pc_component = range(0,1,0.1)
 	route_gen(setting.arrRate,"lane_change.rou.xml")
 	# for pc_i in np.arange(0,1.1,0.1)
-	run([1-pc_comp/10,pc_comp/10],setting.max_decision,setting.safety_level)#global,partial
+	run([1-pc_comp/10,pc_comp/10],setting.max_decision,safety_level=setting.safety_level)#global,partial
 	get_result(options.output)

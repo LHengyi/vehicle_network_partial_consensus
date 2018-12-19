@@ -2,7 +2,7 @@
 set arrive_rate = "0.1 0.2 0.3 0.4 0.5"
 
 
-FOR /L %%s IN (0,2,100) DO (
+FOR /L %%s IN (0,10,100) DO (
 	FOR /L %%l IN (1,1,3) DO (
 		FOR /L %%r IN (3,3,30) DO (
 			echo %%s %%l %%r

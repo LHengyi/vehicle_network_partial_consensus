@@ -19,7 +19,7 @@ class Vehicle(object):
 		self.mID = 0
 		self.arrived = False
 		self.arriveTime = 0
-		self.decision = (-1,-1)
+		self.decision = (None,-1)
 		#self.leaveIntersection = LeaveIntersection()
 		if setting.log == True:
 			self.timelog = []

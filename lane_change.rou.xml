@@ -1,44 +1,44 @@
 <routes>
 <route id = "Route1" edges = "edge1 edge2" />
 <vType id="type1" carFollowModel="IDM"/>
-<vehicle id="V0" type= "type1" route="Route1" depart="0.172493" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V1" type= "type1" route="Route1" depart="0.259728" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V2" type= "type1" route="Route1" depart="0.356134" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V3" type= "type1" route="Route1" depart="1.285040" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V4" type= "type1" route="Route1" depart="1.467559" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V5" type= "type1" route="Route1" depart="1.991950" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V6" type= "type1" route="Route1" depart="2.650893" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V7" type= "type1" route="Route1" depart="2.857205" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V8" type= "type1" route="Route1" depart="2.886075" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V9" type= "type1" route="Route1" depart="3.097098" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V10" type= "type1" route="Route1" depart="3.201727" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V11" type= "type1" route="Route1" depart="3.277680" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V12" type= "type1" route="Route1" depart="3.484366" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V13" type= "type1" route="Route1" depart="4.737637" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V14" type= "type1" route="Route1" depart="4.818677" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V15" type= "type1" route="Route1" depart="5.277470" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V16" type= "type1" route="Route1" depart="6.237739" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V17" type= "type1" route="Route1" depart="6.250328" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V18" type= "type1" route="Route1" depart="6.464306" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V19" type= "type1" route="Route1" depart="7.384171" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V20" type= "type1" route="Route1" depart="7.435575" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V21" type= "type1" route="Route1" depart="7.595492" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V22" type= "type1" route="Route1" depart="7.670204" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V23" type= "type1" route="Route1" depart="7.865251" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V24" type= "type1" route="Route1" depart="8.446496" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V25" type= "type1" route="Route1" depart="9.391899" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V26" type= "type1" route="Route1" depart="9.438675" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V27" type= "type1" route="Route1" depart="9.750869" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V28" type= "type1" route="Route1" depart="9.784689" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V29" type= "type1" route="Route1" depart="9.848464" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V30" type= "type1" route="Route1" depart="9.900881" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V31" type= "type1" route="Route1" depart="10.391596" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V32" type= "type1" route="Route1" depart="10.433153" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V33" type= "type1" route="Route1" depart="10.811224" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V34" type= "type1" route="Route1" depart="10.814961" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V35" type= "type1" route="Route1" depart="10.896214" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V36" type= "type1" route="Route1" depart="11.472226" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V37" type= "type1" route="Route1" depart="11.650408" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V38" type= "type1" route="Route1" depart="11.717057" 					departSpeed="10" departPos="base" color="1,0,0" />
-<vehicle id="V39" type= "type1" route="Route1" depart="12.143361" 					departSpeed="10" departPos="base" color="1,0,0" />
+<vehicle id="V0" type= "type1" route="Route1" depart="0.801795" 					departSpeed="10" departPos="base" color="1,0,0" departLane="1" />
+<vehicle id="V1" type= "type1" route="Route1" depart="1.001112" 					departSpeed="10" departPos="base" color="1,0,0" departLane="1" />
+<vehicle id="V2" type= "type1" route="Route1" depart="1.057111" 					departSpeed="10" departPos="base" color="1,0,0" departLane="2" />
+<vehicle id="V3" type= "type1" route="Route1" depart="1.475093" 					departSpeed="10" departPos="base" color="1,0,0" departLane="1" />
+<vehicle id="V4" type= "type1" route="Route1" depart="1.564225" 					departSpeed="10" departPos="base" color="1,0,0" departLane="2" />
+<vehicle id="V5" type= "type1" route="Route1" depart="1.798435" 					departSpeed="10" departPos="base" color="1,0,0" departLane="1" />
+<vehicle id="V6" type= "type1" route="Route1" depart="2.304393" 					departSpeed="10" departPos="base" color="1,0,0" departLane="1" />
+<vehicle id="V7" type= "type1" route="Route1" depart="2.337159" 					departSpeed="10" departPos="base" color="1,0,0" departLane="1" />
+<vehicle id="V8" type= "type1" route="Route1" depart="2.447907" 					departSpeed="10" departPos="base" color="1,0,0" departLane="0" />
+<vehicle id="V9" type= "type1" route="Route1" depart="2.550722" 					departSpeed="10" departPos="base" color="1,0,0" departLane="0" />
+<vehicle id="V10" type= "type1" route="Route1" depart="3.092976" 					departSpeed="10" departPos="base" color="1,0,0" departLane="2" />
+<vehicle id="V11" type= "type1" route="Route1" depart="3.140866" 					departSpeed="10" departPos="base" color="1,0,0" departLane="2" />
+<vehicle id="V12" type= "type1" route="Route1" depart="3.445926" 					departSpeed="10" departPos="base" color="1,0,0" departLane="0" />
+<vehicle id="V13" type= "type1" route="Route1" depart="3.692753" 					departSpeed="10" departPos="base" color="1,0,0" departLane="0" />
+<vehicle id="V14" type= "type1" route="Route1" depart="3.745967" 					departSpeed="10" departPos="base" color="1,0,0" departLane="2" />
+<vehicle id="V15" type= "type1" route="Route1" depart="4.675661" 					departSpeed="10" departPos="base" color="1,0,0" departLane="0" />
+<vehicle id="V16" type= "type1" route="Route1" depart="6.075882" 					departSpeed="10" departPos="base" color="1,0,0" departLane="2" />
+<vehicle id="V17" type= "type1" route="Route1" depart="6.510771" 					departSpeed="10" departPos="base" color="1,0,0" departLane="1" />
+<vehicle id="V18" type= "type1" route="Route1" depart="6.565215" 					departSpeed="10" departPos="base" color="1,0,0" departLane="1" />
+<vehicle id="V19" type= "type1" route="Route1" depart="6.828547" 					departSpeed="10" departPos="base" color="1,0,0" departLane="2" />
+<vehicle id="V20" type= "type1" route="Route1" depart="7.261512" 					departSpeed="10" departPos="base" color="1,0,0" departLane="1" />
+<vehicle id="V21" type= "type1" route="Route1" depart="7.851036" 					departSpeed="10" departPos="base" color="1,0,0" departLane="2" />
+<vehicle id="V22" type= "type1" route="Route1" depart="8.149607" 					departSpeed="10" departPos="base" color="1,0,0" departLane="0" />
+<vehicle id="V23" type= "type1" route="Route1" depart="9.365132" 					departSpeed="10" departPos="base" color="1,0,0" departLane="0" />
+<vehicle id="V24" type= "type1" route="Route1" depart="9.731775" 					departSpeed="10" departPos="base" color="1,0,0" departLane="0" />
+<vehicle id="V25" type= "type1" route="Route1" depart="10.371883" 					departSpeed="10" departPos="base" color="1,0,0" departLane="1" />
+<vehicle id="V26" type= "type1" route="Route1" depart="11.285678" 					departSpeed="10" departPos="base" color="1,0,0" departLane="1" />
+<vehicle id="V27" type= "type1" route="Route1" depart="11.307865" 					departSpeed="10" departPos="base" color="1,0,0" departLane="1" />
+<vehicle id="V28" type= "type1" route="Route1" depart="11.756701" 					departSpeed="10" departPos="base" color="1,0,0" departLane="0" />
+<vehicle id="V29" type= "type1" route="Route1" depart="11.883890" 					departSpeed="10" departPos="base" color="1,0,0" departLane="0" />
+<vehicle id="V30" type= "type1" route="Route1" depart="12.267293" 					departSpeed="10" departPos="base" color="1,0,0" departLane="1" />
+<vehicle id="V31" type= "type1" route="Route1" depart="12.511540" 					departSpeed="10" departPos="base" color="1,0,0" departLane="2" />
+<vehicle id="V32" type= "type1" route="Route1" depart="12.548975" 					departSpeed="10" departPos="base" color="1,0,0" departLane="0" />
+<vehicle id="V33" type= "type1" route="Route1" depart="12.729753" 					departSpeed="10" departPos="base" color="1,0,0" departLane="1" />
+<vehicle id="V34" type= "type1" route="Route1" depart="13.195985" 					departSpeed="10" departPos="base" color="1,0,0" departLane="1" />
+<vehicle id="V35" type= "type1" route="Route1" depart="13.769833" 					departSpeed="10" departPos="base" color="1,0,0" departLane="2" />
+<vehicle id="V36" type= "type1" route="Route1" depart="13.907421" 					departSpeed="10" departPos="base" color="1,0,0" departLane="2" />
+<vehicle id="V37" type= "type1" route="Route1" depart="14.427246" 					departSpeed="10" departPos="base" color="1,0,0" departLane="2" />
+<vehicle id="V38" type= "type1" route="Route1" depart="14.728700" 					departSpeed="10" departPos="base" color="1,0,0" departLane="0" />
+<vehicle id="V39" type= "type1" route="Route1" depart="14.941191" 					departSpeed="10" departPos="base" color="1,0,0" departLane="2" />
 </routes>
