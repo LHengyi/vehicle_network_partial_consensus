@@ -214,6 +214,21 @@ def apply_maeuver(ego_vehicle):
 		else:
 			hd_speed = min(acca_speed_cur_lane,min(hd_speed_cur_lane,CACC_check(ego_vehicle,target_lane_pre)))
 	target_speed = min(acca_speed,hd_speed,acca_speed_cur_lane,hd_speed_cur_lane)
+
+	# avoid collision when other vehicle change into this lane
+	if cur_lane_idx+1 in range(0,3):
+		neighbor_pre = find_pred(ego_vehicle,cur_lane_idx+1)
+		if neighbor_pre:
+			neighbor_pre_intention = lane_change_intention(neighbor_pre)
+			if cur_lane_idx+1+neighbor_pre_intention == cur_lane_idx:
+				target_speed = min(target_speed,CACC_check(ego_vehicle,neighbor_pre))
+	if cur_lane_idx-1 in range(0,3):
+		neighbor_pre = find_pred(ego_vehicle,cur_lane_idx-1)
+		if neighbor_pre:
+			neighbor_pre_intention = lane_change_intention(neighbor_pre)
+			if cur_lane_idx-1+neighbor_pre_intention == cur_lane_idx:
+				target_speed = min(target_speed,CACC_check(ego_vehicle,neighbor_pre))
+				
 	if target_speed == 100:
 		target_speed = next_speed
 	vehicle_length = traci.vehicle.getLength(ego_vehicle)
